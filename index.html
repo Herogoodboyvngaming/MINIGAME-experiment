@@ -136,7 +136,7 @@
         <h2>🛒 SHOP MUA ITEM</h2>
         <p>DÙNG ĐIỂM KIẾM ĐƯỢC ĐỂ MUA SKIN VÀ HIỆU ỨNG ĐẸP HƠN!</p>
         <div class="shop-info">
-            <p>💰 ĐIỂM HIỆN TẠI: <strong id="playerCoins">0</strong></p>
+            <p>💰 ĐIỂM HIỆN TẠI: <strong id="playerCoinsShop">0</strong></p>
         </div>
         <div class="shop-items">
             <div class="shop-item">
@@ -237,6 +237,7 @@
 
         window.onload = () => {
             document.getElementById('playerCoins').innerText = playerCoins;
+            document.getElementById('playerCoinsShop').innerText = playerCoins;
             updateShopButtons();
             adjustCanvasSize();
             showMainScreen();
@@ -257,6 +258,9 @@
             gameStarted = false;
             closeAllModals();
             adjustCanvasSize();
+            if (gameId === 'shop') {
+                document.getElementById('playerCoinsShop').innerText = playerCoins;
+            }
         }
 
         function closeAllModals() {
@@ -328,6 +332,11 @@
         function restartCurrentGame() {
             document.getElementById('gameModal').style.display = 'none';
             showGame(currentGame);
+            gameStarted = true;
+            if (currentGame === 'snake') initSnake();
+            if (currentGame === 'flappy') initFlappy();
+            if (currentGame === 'pikachu') initPikachu();
+            if (currentGame === 'tictactoe') resetTTT();
         }
 
         function showModal(title, message, isVictory = false, isLose = false) {
@@ -381,6 +390,9 @@
             playerCoins += amount;
             localStorage.setItem('playerCoins', playerCoins);
             document.getElementById('playerCoins').innerText = playerCoins;
+            if (currentGame === 'shop') {
+                document.getElementById('playerCoinsShop').innerText = playerCoins;
+            }
         }
 
         function adjustCanvasSize() {
@@ -449,300 +461,4 @@
 
                 let head = {x: snake[0].x + dx, y: snake[0].y + dy};
 
-                if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height || snake.slice(1).some(part => part.x === head.x && part.y === head.y)) {
-                    addCoins(snakeScore);
-                    showModal('💔 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${snakeScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
-                    return;
-                }
-
-                snake.unshift(head);
-
-                if (head.x === foodX && head.y === foodY) {
-                    snakeScore++;
-                    document.getElementById('snakeScore').innerText = 'ĐIỂM HIỆN TẠI: ' + snakeScore;
-                    createFood();
-                    playSound('eatSound');
-                } else {
-                    snake.pop();
-                }
-            }
-            requestAnimationFrame(updateSnake);
-        }
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowUp') pendingDirection = 'up';
-            if (e.key === 'ArrowDown') pendingDirection = 'down';
-            if (e.key === 'ArrowLeft') pendingDirection = 'left';
-            if (e.key === 'ArrowRight') pendingDirection = 'right';
-        });
-
-        function changeDirection(dir) {
-            pendingDirection = dir;
-        }
-
-        let tttBoard = Array(9).fill(null);
-
-        function playTTT(index) {
-            if (tttBoard[index] || checkWinner(tttBoard)) return;
-            tttBoard[index] = 'X';
-            document.getElementById('ttt' + index).innerText = 'X';
-            if (checkWinner(tttBoard)) {
-                addCoins(50);
-                showModal('🎉 CHÚC MỪNG!', 'BẠN THẮNG CỜ CARO!<br>+50 💰 THƯỞNG!', true);
-                return;
-            }
-            if (tttBoard.every(cell => cell)) {
-                addCoins(10);
-                showModal('🤝 HÒA NHAU!', 'HÒA VÁN NÀY!<br>+10 💰 AN ỦI', false);
-                return;
-            }
-            setTimeout(computerMove, 500);
-        }
-
-        function computerMove() {
-            let bestMove = -1;
-            for (let i = 0; i < 9; i++) {
-                if (!tttBoard[i]) {
-                    tttBoard[i] = 'X';
-                    if (checkWinner(tttBoard)) { bestMove = i; tttBoard[i] = null; break; }
-                    tttBoard[i] = null;
-                }
-            }
-            if (bestMove === -1) {
-                for (let i = 0; i < 9; i++) {
-                    if (!tttBoard[i]) {
-                        tttBoard[i] = 'O';
-                        if (checkWinner(tttBoard)) { bestMove = i; tttBoard[i] = null; break; }
-                        tttBoard[i] = null;
-                    }
-                }
-            }
-            if (bestMove === -1) {
-                let available = tttBoard.map((v, i) => v === null ? i : null).filter(v => v !== null);
-                bestMove = available[Math.floor(Math.random() * available.length)];
-            }
-            tttBoard[bestMove] = 'O';
-            document.getElementById('ttt' + bestMove).innerText = 'O';
-            if (checkWinner(tttBoard)) {
-                addCoins(5);
-                showModal('🤖 MÁY THẮNG!', 'MÁY THẮNG RỒI!<br>+5 💰 AN ỦI', false);
-            } else if (tttBoard.every(cell => cell)) {
-                addCoins(10);
-                showModal('🤝 HÒA NHAU!', 'LẠI HÒA!<br>+10 💰', false);
-            }
-        }
-
-        function checkWinner(board) {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return wins.some(combo => combo.every(i => board[i] === board[combo[0]] && board[i]));
-        }
-
-        function resetTTT() {
-            tttBoard = Array(9).fill(null);
-            for (let i = 0; i < 9; i++) document.getElementById('ttt' + i).innerText = ' ';
-            document.getElementById('tttStatus').innerText = '';
-        }
-
-        let flappyCanvas, flappyCtx, birdY = 250, birdVelocity = 0, pipes = [], flappyScore = 0;
-        let gravity = 0.5, jump = -10;
-
-        function initFlappy() {
-            flappyCanvas = document.getElementById('flappyCanvas');
-            flappyCtx = flappyCanvas.getContext('2d');
-            birdY = 250; birdVelocity = 0; pipes = []; flappyScore = 0;
-            flappyPaused = false;
-            document.getElementById('flappyScore').innerText = 'ĐIỂM HIỆN TẠI: 0 / 100';
-            pipes.push({x: 400, gap: Math.random() * 150 + 100});
-            flappyAnimationId = requestAnimationFrame(updateFlappy);
-        }
-
-        function updateFlappy() {
-            if (flappyPaused) return;
-
-            flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
-            birdVelocity += gravity;
-            birdY += birdVelocity;
-
-            if (birdY > flappyCanvas.height - 20 || birdY < 0) {
-                addCoins(Math.floor(flappyScore / 2));
-                showModal('💥 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${flappyScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
-                return;
-            }
-
-            flappyCtx.fillStyle = ownedItems.includes('heroBird') ? '#e74c3c' : '#FFEB3B';
-            flappyCtx.fillRect(50, birdY, 30, 20);
-            flappyCtx.fillStyle = '#000';
-            flappyCtx.fillRect(75, birdY + 5, 10, 8);
-
-            pipes.forEach(pipe => {
-                pipe.x -= 2;
-                flappyCtx.fillStyle = '#4CAF50';
-                flappyCtx.fillRect(pipe.x, 0, 50, pipe.gap);
-                flappyCtx.fillRect(pipe.x, pipe.gap + 150, 50, flappyCanvas.height - pipe.gap - 150);
-
-                if (pipe.x + 50 === 80) {
-                    flappyScore++;
-                    document.getElementById('flappyScore').innerText = 'ĐIỂM HIỆN TẠI: ' + flappyScore + ' / 100';
-                    playSound('eatSound');
-                    if (flappyScore >= 100) {
-                        addCoins(200);
-                        showModal('🎉 CHÚC MỪNG WIN!', 'BẠN ĐÃ ĐẠT 100 ĐIỂM!<br>+200 💰 THƯỞNG LỚN!', true);
-                        return;
-                    }
-                }
-
-                if (pipe.x < 80 && pipe.x > 20 && (birdY < pipe.gap || birdY + 20 > pipe.gap + 150)) {
-                    addCoins(Math.floor(flappyScore / 2));
-                    showModal('💥 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${flappyScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
-                    return;
-                }
-            });
-
-            if (pipes[pipes.length-1].x < 200) pipes.push({x: 400, gap: Math.random() * 150 + 100});
-            if (pipes[0].x < -50) pipes.shift();
-
-            flappyAnimationId = requestAnimationFrame(updateFlappy);
-        }
-
-        document.addEventListener('keydown', e => { if (e.key === ' ') { if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } } });
-        flappyCanvas.addEventListener('click', () => { if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } });
-        flappyCanvas.addEventListener('touchstart', e => { e.preventDefault(); if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } });
-
-        const emojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
-        let pikachuCards = [...emojis, ...emojis];
-        let selected = [];
-
-        function initPikachu() {
-            pikachuCards.sort(() => Math.random() - 0.5);
-            const board = document.getElementById('pikachuBoard');
-            board.innerHTML = '';
-            pikachuCards.forEach((emoji, i) => {
-                const card = document.createElement('div');
-                card.className = 'pikachu-card';
-                card.onclick = () => flipCard(card, emoji);
-                card.ontouchstart = () => flipCard(card, emoji);
-                board.appendChild(card);
-            });
-            document.getElementById('pairsLeft').innerText = '8';
-        }
-
-        function flipCard(card, emoji) {
-            if (card.innerText || selected.length === 2) return;
-            card.innerText = emoji;
-            card.style.background = '#fff';
-            selected.push({card, emoji});
-            if (selected.length === 2) {
-                if (selected[0].emoji === selected[1].emoji) {
-                    let matchBg = ownedItems.includes('sparkleMatch') ? 'linear-gradient(135deg, #ff9a9e, #fad0c4)' : '#a8e6cf';
-                    selected[0].card.style.background = matchBg;
-                    selected[1].card.style.background = matchBg;
-                    selected[0].card.style.cursor = 'default';
-                    selected[1].card.style.cursor = 'default';
-                    playSound('matchSound');
-                    let pairs = parseInt(document.getElementById('pairsLeft').innerText) - 1;
-                    document.getElementById('pairsLeft').innerText = pairs;
-                    if (pairs === 0) {
-                        addCoins(100);
-                        showModal('🎉 TUYỆT VỜI!', 'BẠN ĐÃ GHÉP HẾT!<br>+100 💰 THƯỞNG LỚN!', true);
-                    }
-                } else {
-                    setTimeout(() => {
-                        selected[0].card.innerText = '';
-                        selected[1].card.innerText = '';
-                        selected[0].card.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-                        selected[1].card.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-                    }, 800);
-                }
-                selected = [];
-            }
-        }
-
-        function showInfo() {
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeInfo() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        function showBugModal() {
-            document.getElementById('bugModal').style.display = 'flex';
-        }
-
-        function closeBugModal() {
-            document.getElementById('bugModal').style.display = 'none';
-        }
-
-        function sendBugReport() {
-            const email = document.getElementById('bugEmail').value.trim();
-            const message = document.getElementById('bugMessage').value.trim();
-            if (email && message) {
-                alert('CẢM ƠN BẠN ĐÃ BÁO CÁO LỖI, MÌNH SẼ SỚM SỬA LỖI TRONG VÒNG 24H HOẶC HƠN NẾU MÌNH BẬN');
-                document.getElementById('bugEmail').value = '';
-                document.getElementById('bugMessage').value = '';
-                closeBugModal();
-            } else {
-                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ TIN NHẮN!');
-            }
-        }
-
-        function showSuggestModal() {
-            document.getElementById('suggestModal').style.display = 'flex';
-        }
-
-        function closeSuggestModal() {
-            document.getElementById('suggestModal').style.display = 'none';
-        }
-
-        function sendSuggest() {
-            const email = document.getElementById('suggestEmail').value.trim();
-            const message = document.getElementById('suggestMessage').value.trim();
-            if (email && message) {
-                alert('CẢM ƠN GỢI Ý CỦA BẠN! MÌNH SẼ XEM XÉT THÊM TRÒ MỚI ❤️');
-                document.getElementById('suggestEmail').value = '';
-                document.getElementById('suggestMessage').value = '';
-                closeSuggestModal();
-            } else {
-                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ GỢI Ý!');
-            }
-        }
-
-        function updateShopButtons() {
-            const buttons = {
-                'redSnake': 'buy-redSnake',
-                'rainbowSnake': 'buy-rainbowSnake',
-                'heroBird': 'buy-heroBird',
-                'sparkleMatch': 'buy-sparkleMatch'
-            };
-            Object.keys(buttons).forEach(item => {
-                const btn = document.getElementById(buttons[item]);
-                if (btn) {
-                    if (ownedItems.includes(item)) {
-                        btn.innerText = 'ĐÃ SỞ HỮU';
-                        btn.disabled = true;
-                    } else {
-                        btn.innerText = 'MUA';
-                        btn.disabled = false;
-                    }
-                }
-            });
-        }
-
-        function buyItem(item, cost) {
-            if (playerCoins >= cost && !ownedItems.includes(item)) {
-                playerCoins -= cost;
-                ownedItems.push(item);
-                localStorage.setItem('playerCoins', playerCoins);
-                localStorage.setItem('ownedItems', JSON.stringify(ownedItems));
-                document.getElementById('playerCoins').innerText = playerCoins;
-                alert('🎉 MUA THÀNH CÔNG! ITEM ĐÃ ĐƯỢC THÊM VÀO KHO.');
-                updateShopButtons();
-            } else if (ownedItems.includes(item)) {
-                alert('BẠN ĐÃ SỞ HỮU ITEM NÀY RỒI!');
-            } else {
-                alert('KHÔNG ĐỦ ĐIỂM ĐỂ MUA!');
-            }
-        }
-    </script>
-</body>
-</html>
+         

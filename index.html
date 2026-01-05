@@ -128,10 +128,10 @@
                 <ul>
                     <li>Thêm hệ thống SHOP mua skin & hiệu ứng bằng điểm kiếm được</li>
                     <li>Điểm tự động lưu (localStorage) - không mất khi reload</li>
-                    <li>Thay toàn bộ âm thanh bằng sound effects vui nhộn từ MyInstants</li>
+                    <li>Thay toàn bộ âm thanh bằng sound effects vui nhộn từ MyInstants (Mario, FF)</li>
                     <li>Modal thắng/thua đẹp mắt với nút chơi lại</li>
                     <li>Tối ưu hoàn toàn cho mobile, tablet, PC</li>
-                    <li>Sửa toàn bộ bug cũ (điểm rắn, va chạm, responsive...)</li>
+                    <li>Sửa toàn bộ bug cũ (canvas trắng, điểm rắn, va chạm...)</li>
                 </ul>
                 <p><strong>Lời nhắn:</strong> Cảm ơn các bạn đã chơi! Nếu thích hãy share cho bạn bè nhé ❤️</p>
             </div>
@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Âm thanh mới từ MyInstants -->
+    <!-- Âm thanh MyInstants -->
     <audio id="eatSound" preload="auto" src="https://www.myinstants.com/media/sounds/coin-mario.mp3"></audio>
     <audio id="jumpSound" preload="auto" src="https://www.myinstants.com/media/sounds/mario-jump.mp3"></audio>
     <audio id="matchSound" preload="auto" src="https://www.myinstants.com/media/sounds/success-chime-49738.mp3"></audio>
@@ -155,6 +155,7 @@
             document.getElementById('playerCoins').innerText = playerCoins;
             updateShopButtons();
             adjustCanvasSize();
+            showGame('snake'); // FIX CANVAS TRẮNG: TỰ ĐỘNG VÀO RẮN SĂN MỒI KHI MỞ TRANG
         };
 
         function showGame(gameId) {
@@ -176,10 +177,22 @@
                 btn.disabled = false;
                 btn.innerText = 'Mua';
             });
-            if (ownedItems.includes('redSnake')) { document.getElementById('buy-redSnake').innerText = 'Đã sở hữu'; document.getElementById('buy-redSnake').disabled = true; }
-            if (ownedItems.includes('rainbowSnake')) { document.getElementById('buy-rainbowSnake').innerText = 'Đã sở hữu'; document.getElementById('buy-rainbowSnake').disabled = true; }
-            if (ownedItems.includes('heroBird')) { document.getElementById('buy-heroBird').innerText = 'Đã sở hữu'; document.getElementById('buy-heroBird').disabled = true; }
-            if (ownedItems.includes('sparkleMatch')) { document.getElementById('buy-sparkleMatch').innerText = 'Đã sở hữu'; document.getElementById('buy-sparkleMatch').disabled = true; }
+            if (ownedItems.includes('redSnake')) {
+                const btn = document.getElementById('buy-redSnake');
+                if (btn) { btn.innerText = 'Đã sở hữu'; btn.disabled = true; }
+            }
+            if (ownedItems.includes('rainbowSnake')) {
+                const btn = document.getElementById('buy-rainbowSnake');
+                if (btn) { btn.innerText = 'Đã sở hữu'; btn.disabled = true; }
+            }
+            if (ownedItems.includes('heroBird')) {
+                const btn = document.getElementById('buy-heroBird');
+                if (btn) { btn.innerText = 'Đã sở hữu'; btn.disabled = true; }
+            }
+            if (ownedItems.includes('sparkleMatch')) {
+                const btn = document.getElementById('buy-sparkleMatch');
+                if (btn) { btn.innerText = 'Đã sở hữu'; btn.disabled = true; }
+            }
         }
 
         function buyItem(item, cost) {
@@ -442,7 +455,7 @@
                 }
             });
 
-            if (pipes[pipes.length-1].x < 200) pipes.push({x: 400, gap: Math.random() * 200 + 100});
+            if (pipes[pipes.length - 1].x < 200) pipes.push({x: 400, gap: Math.random() * 200 + 100});
             if (pipes[0].x < -60) pipes.shift();
 
             requestAnimationFrame(updateFlappy);

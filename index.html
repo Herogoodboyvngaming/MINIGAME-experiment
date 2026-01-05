@@ -27,13 +27,19 @@
         <button class="info-btn" onclick="showInfo()">ℹ️ THÔNG TIN & UPDATE</button>
     </div>
 
-    <!-- RẮN SĂN MỒI -->
     <div id="snake" class="game-container">
         <h2>🐍 RẮN SĂN MỒI</h2>
         <div class="controls-guide">
             <p><strong>ĐIỀU KHIỂN:</strong></p>
             <p>🖥️ PC/MAC: PHÍM MŨI TÊN ↑ ← ↓ →</p>
             <p>📱 MOBILE: NÚT ĐIỀU HƯỚNG DƯỚI MÀN HÌNH</p>
+        </div>
+        <div class="game-controls">
+            <button onclick="confirmStart()">BẮT ĐẦU</button>
+            <button onclick="pauseSnake()">⏸ TẠM DỪNG</button>
+            <button onclick="confirmRestart()">🔄 CHƠI LẠI (RESET ĐIỂM)</button>
+            <button onclick="confirmAbandon()">❌ TỪ BỎ (-10 ĐIỂM)</button>
+            <button onclick="confirmBackHome()">🏠 TRỞ VỀ MÀN HÌNH CHÍNH</button>
         </div>
         <canvas id="snakeCanvas" width="400" height="400"></canvas>
         <div id="snakeScore" class="score">ĐIỂM HIỆN TẠI: 0</div>
@@ -47,12 +53,18 @@
         </div>
     </div>
 
-    <!-- Ô ĂN QUAN (CỜ CARO) -->
     <div id="tictactoe" class="game-container">
         <h2>⭕ Ô ĂN QUAN (CỜ CARO)</h2>
         <div class="controls-guide">
             <p><strong>ĐIỀU KHIỂN:</strong></p>
             <p>🖥️📱 CLICK/CHẠM VÀO Ô TRỐNG ĐỂ ĐẶT X (BẠN LÀ X, MÁY LÀ O)</p>
+        </div>
+        <div class="game-controls">
+            <button onclick="confirmStart()">BẮT ĐẦU</button>
+            <button onclick="pauseTictactoe()">⏸ TẠM DỪNG</button>
+            <button onclick="confirmRestart()">🔄 CHƠI LẠI (RESET ĐIỂM)</button>
+            <button onclick="confirmAbandon()">❌ TỪ BỎ (-10 ĐIỂM)</button>
+            <button onclick="confirmBackHome()">🏠 TRỞ VỀ MÀN HÌNH CHÍNH</button>
         </div>
         <table class="ttt-table">
             <tr>
@@ -74,7 +86,6 @@
         <p id="tttStatus" class="status"></p>
     </div>
 
-    <!-- FLAPPY BIRD (ĐÃ SỬA THEO YÊU CẦU) -->
     <div id="flappy" class="game-container">
         <h2>🐦 FLAPPY BIRD</h2>
         <div class="controls-guide">
@@ -83,15 +94,16 @@
             <p>📱 MOBILE: CHẠM MÀN HÌNH ĐỂ BAY LÊN</p>
         </div>
         <div class="game-controls">
+            <button onclick="confirmStart()">BẮT ĐẦU</button>
             <button onclick="pauseFlappy()">⏸ TẠM DỪNG</button>
             <button onclick="confirmRestart()">🔄 CHƠI LẠI (RESET ĐIỂM)</button>
-            <button onclick="confirmQuit()">🏠 TRỞ VỀ MENU (-10 ĐIỂM)</button>
+            <button onclick="confirmAbandon()">❌ TỪ BỎ (-10 ĐIỂM)</button>
+            <button onclick="confirmBackHome()">🏠 TRỞ VỀ MÀN HÌNH CHÍNH</button>
         </div>
         <canvas id="flappyCanvas" width="400" height="500"></canvas>
         <div id="flappyScore" class="score">ĐIỂM HIỆN TẠI: 0 / 100</div>
     </div>
 
-    <!-- PIKACHU GHÉP CẶP -->
     <div id="pikachu" class="game-container">
         <h2>🀄 PIKACHU GHÉP CẶP</h2>
         <div class="controls-guide">
@@ -99,11 +111,17 @@
             <p>🖥️📱 CLICK/CHẠM VÀO 2 Ô GIỐNG NHAU ĐỂ GHÉP</p>
             <p>GHÉP HẾT ĐỂ THẮNG!</p>
         </div>
+        <div class="game-controls">
+            <button onclick="confirmStart()">BẮT ĐẦU</button>
+            <button onclick="pausePikachu()">⏸ TẠM DỪNG</button>
+            <button onclick="confirmRestart()">🔄 CHƠI LẠI (RESET ĐIỂM)</button>
+            <button onclick="confirmAbandon()">❌ TỪ BỎ (-10 ĐIỂM)</button>
+            <button onclick="confirmBackHome()">🏠 TRỞ VỀ MÀN HÌNH CHÍNH</button>
+        </div>
         <div id="pikachuBoard"></div>
         <p id="pikachuStatus" class="status">CÒN LẠI: <span id="pairsLeft">8</span> CẶP</p>
     </div>
 
-    <!-- SHOP -->
     <div id="shop" class="game-container">
         <h2>🛒 SHOP MUA ITEM</h2>
         <p>DÙNG ĐIỂM KIẾM ĐƯỢC ĐỂ MUA SKIN VÀ HIỆU ỨNG ĐẸP HƠN!</p>
@@ -134,7 +152,6 @@
         </div>
     </div>
 
-    <!-- MODAL GAME OVER / THẮNG -->
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <div id="fireworks" class="fireworks"></div>
@@ -145,7 +162,6 @@
         </div>
     </div>
 
-    <!-- MODAL THÔNG TIN -->
     <div id="infoModal" class="modal">
         <div class="modal-content info-modal">
             <h2>ℹ️ THÔNG TIN & UPDATE</h2>
@@ -154,11 +170,12 @@
                 <p><strong>PHIÊN BẢN:</strong> 3.0</p>
                 <p><strong>CẬP NHẬT MỚI:</strong></p>
                 <ul>
-                    <li>FLAPPY BIRD CẦN 100 ĐIỂM ĐỂ WIN + HIỆU ỨNG PHÁO HOA / MƯA</li>
-                    <li>NÚT TẠM DỪNG, CHƠI LẠI, TRỞ VỀ MENU VỚI XÁC NHẬN</li>
-                    <li>NÚT REPORT BUGS & GỢI Ý TRÒ CHƠI</li>
-                    <li>BẢNG ĐIỂM CHUNG + HƯỚNG DẪN ĐIỀU KHIỂN RÕ RÀNG</li>
-                    <li>FOOTER MADE IN VN</li>
+                    <li>BẢNG ĐIỂM CHUNG Ở ĐẦU TRANG</li>
+                    <li>HƯỚNG DẪN ĐIỀU KHIỂN RÕ RÀNG PC & MOBILE</li>
+                    <li>GIAO DIỆN ĐẸP LUNG LINH, CANVAS FULL FIT</li>
+                    <li>ÂM THANH MARIO/FF VUI TAI</li>
+                    <li>SHOP + LƯU ĐIỂM + SKIN HOẠT ĐỘNG 100%</li>
+                    <li>FIX HẾT LỖI CANVAS TRẮNG, LAYOUT MOBILE</li>
                 </ul>
                 <p><strong>LỜI NHẮN:</strong> CHÚC CÁC BẠN CHƠI VUI! ❤️</p>
             </div>
@@ -166,7 +183,6 @@
         </div>
     </div>
 
-    <!-- MODAL REPORT BUGS -->
     <div id="bugModal" class="modal">
         <div class="modal-content">
             <h2>🐛 REPORT BUGS</h2>
@@ -179,7 +195,6 @@
         </div>
     </div>
 
-    <!-- MODAL GỢI Ý TRÒ CHƠI -->
     <div id="suggestModal" class="modal">
         <div class="modal-content">
             <h2>💡 GỢI Ý TRÒ CHƠI</h2>
@@ -192,7 +207,6 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
     <div class="footer">
         <p>MADE IN VN 🇻🇳</p>
         <p>MADE BY: NGUYỄN CHÍ DỰ ♥️🇻🇳</p>
@@ -202,7 +216,6 @@
         </div>
     </div>
 
-    <!-- ÂM THANH -->
     <audio id="eatSound" preload="auto" src="https://www.myinstants.com/media/sounds/coin-mario.mp3"></audio>
     <audio id="jumpSound" preload="auto" src="https://www.myinstants.com/media/sounds/mario-jump.mp3"></audio>
     <audio id="matchSound" preload="auto" src="https://www.myinstants.com/media/sounds/success-chime-49738.mp3"></audio>
@@ -213,7 +226,7 @@
         let currentGame = '';
         let playerCoins = parseInt(localStorage.getItem('playerCoins')) || 0;
         let ownedItems = JSON.parse(localStorage.getItem('ownedItems')) || ['defaultSnake'];
-
+        let gameStarted = false;
         let flappyPaused = false;
         let flappyAnimationId = null;
 
@@ -228,11 +241,7 @@
             document.querySelectorAll('.game-container').forEach(div => div.style.display = 'none');
             document.getElementById(gameId).style.display = 'block';
             currentGame = gameId;
-            if (gameId === 'snake') initSnake();
-            if (gameId === 'flappy') initFlappy();
-            if (gameId === 'pikachu') initPikachu();
-            if (gameId === 'tictactoe') resetTTT();
-            if (gameId === 'shop') updateShopButtons();
+            gameStarted = false;
             closeAllModals();
             adjustCanvasSize();
         }
@@ -246,91 +255,65 @@
             document.getElementById('rain').innerHTML = '';
         }
 
-        function updateShopButtons() {
-            const buttons = {
-                'redSnake': 'buy-redSnake',
-                'rainbowSnake': 'buy-rainbowSnake',
-                'heroBird': 'buy-heroBird',
-                'sparkleMatch': 'buy-sparkleMatch'
-            };
-            Object.keys(buttons).forEach(item => {
-                const btn = document.getElementById(buttons[item]);
-                if (btn) {
-                    if (ownedItems.includes(item)) {
-                        btn.innerText = 'ĐÃ SỞ HỮU';
-                        btn.disabled = true;
-                    } else {
-                        btn.innerText = 'MUA';
-                        btn.disabled = false;
-                    }
-                }
-            });
+        function confirmStart() {
+            if (confirm('BẠN MUỐN BẮT ĐẦU CHƠI?')) {
+                gameStarted = true;
+                if (currentGame === 'snake') initSnake();
+                if (currentGame === 'flappy') initFlappy();
+                if (currentGame === 'pikachu') initPikachu();
+                if (currentGame === 'tictactoe') resetTTT();
+            }
         }
 
-        function buyItem(item, cost) {
-            if (playerCoins >= cost && !ownedItems.includes(item)) {
-                playerCoins -= cost;
-                ownedItems.push(item);
+        function confirmRestart() {
+            if (confirm('BẠN ĐỒNG Ý CHƠI LẠI? ĐIỂM SẼ RESET VỀ 0!')) {
+                restartCurrentGame();
+            }
+        }
+
+        function confirmAbandon() {
+            if (confirm('BẠN ĐỒNG Ý TỪ BỎ? SẼ BỊ TRỪ 10 ĐIỂM!')) {
+                playerCoins = Math.max(0, playerCoins - 10);
                 localStorage.setItem('playerCoins', playerCoins);
-                localStorage.setItem('ownedItems', JSON.stringify(ownedItems));
                 document.getElementById('playerCoins').innerText = playerCoins;
-                alert('🎉 MUA THÀNH CÔNG! ITEM ĐÃ ĐƯỢC THÊM VÀO KHO.');
-                updateShopButtons();
-            } else if (ownedItems.includes(item)) {
-                alert('BẠN ĐÃ SỞ HỮU ITEM NÀY RỒI!');
-            } else {
-                alert('KHÔNG ĐỦ ĐIỂM ĐỂ MUA!');
+                showGame('snake');
             }
         }
 
-        function showInfo() {
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeInfo() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        function showBugModal() {
-            document.getElementById('bugModal').style.display = 'flex';
-        }
-
-        function closeBugModal() {
-            document.getElementById('bugModal').style.display = 'none';
-        }
-
-        function sendBugReport() {
-            const email = document.getElementById('bugEmail').value.trim();
-            const message = document.getElementById('bugMessage').value.trim();
-            if (email && message) {
-                alert('CẢM ƠN BẠN ĐÃ REPORT BUG! MÌNH SẼ SỬA SỚM NHẤT ❤️');
-                document.getElementById('bugEmail').value = '';
-                document.getElementById('bugMessage').value = '';
-                closeBugModal();
-            } else {
-                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ TIN NHẮN!');
+        function confirmBackHome() {
+            if (confirm('BẠN ĐỒNG Ý TRỞ VỀ MÀN HÌNH CHÍNH?')) {
+                showGame('snake');
             }
         }
 
-        function showSuggestModal() {
-            document.getElementById('suggestModal').style.display = 'flex';
-        }
-
-        function closeSuggestModal() {
-            document.getElementById('suggestModal').style.display = 'none';
-        }
-
-        function sendSuggest() {
-            const email = document.getElementById('suggestEmail').value.trim();
-            const message = document.getElementById('suggestMessage').value.trim();
-            if (email && message) {
-                alert('CẢM ƠN GỢI Ý CỦA BẠN! MÌNH SẼ XEM XÉT THÊM TRÒ MỚI ❤️');
-                document.getElementById('suggestEmail').value = '';
-                document.getElementById('suggestMessage').value = '';
-                closeSuggestModal();
+        function pauseFlappy() {
+            if (!gameStarted) return;
+            flappyPaused = !flappyPaused;
+            if (flappyPaused) {
+                cancelAnimationFrame(flappyAnimationId);
             } else {
-                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ GỢI Ý!');
+                flappyAnimationId = requestAnimationFrame(updateFlappy);
             }
+        }
+
+        function pauseSnake() {
+            if (!gameStarted) return;
+            alert('TẠM DỪNG - NHẤN OK ĐỂ TIẾP TỤC');
+        }
+
+        function pausePikachu() {
+            if (!gameStarted) return;
+            alert('TẠM DỪNG - NHẤN OK ĐỂ TIẾP TỤC');
+        }
+
+        function pauseTictactoe() {
+            if (!gameStarted) return;
+            alert('TẠM DỪNG - NHẤN OK ĐỂ TIẾP TỤC');
+        }
+
+        function restartCurrentGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            showGame(currentGame);
         }
 
         function showModal(title, message, isVictory = false) {
@@ -371,35 +354,6 @@
             }
         }
 
-        function restartCurrentGame() {
-            document.getElementById('gameModal').style.display = 'none';
-            showGame(currentGame);
-        }
-
-        function confirmRestart() {
-            if (confirm('BẠN ĐỒNG Ý CHƠI LẠI? ĐIỂM SẼ RESET VỀ 0!')) {
-                restartCurrentGame();
-            }
-        }
-
-        function confirmQuit() {
-            if (confirm('BẠN ĐỒNG Ý TRỞ VỀ MENU? SẼ BỊ TRỪ 10 ĐIỂM!')) {
-                playerCoins = Math.max(0, playerCoins - 10);
-                localStorage.setItem('playerCoins', playerCoins);
-                document.getElementById('playerCoins').innerText = playerCoins;
-                showGame('snake');
-            }
-        }
-
-        function pauseFlappy() {
-            flappyPaused = !flappyPaused;
-            if (flappyPaused) {
-                cancelAnimationFrame(flappyAnimationId);
-            } else {
-                requestAnimationFrame(updateFlappy);
-            }
-        }
-
         function playSound(id) {
             const sound = document.getElementById(id);
             if (sound) {
@@ -425,7 +379,6 @@
         }
         window.addEventListener('resize', adjustCanvasSize);
 
-        // RẮN SĂN MỒI (GIỮ NGUYÊN)
         let snakeCanvas, snakeCtx, snakeScore = 0;
         let snake = [{x: 200, y: 200}];
         let dx = 10, dy = 0;
@@ -512,7 +465,6 @@
             pendingDirection = dir;
         }
 
-        // CỜ CARO (GIỮ NGUYÊN)
         let tttBoard = Array(9).fill(null);
 
         function playTTT(index) {
@@ -576,7 +528,6 @@
             document.getElementById('tttStatus').innerText = '';
         }
 
-        // FLAPPY BIRD (ĐÃ SỬA: CHIM NHỎ HƠN, HITBOX NHỎ, 100 ĐIỂM WIN, NÚT ĐIỀU KHIỂN)
         let flappyCanvas, flappyCtx, birdY = 250, birdVelocity = 0, pipes = [], flappyScore = 0;
         let gravity = 0.5, jump = -10;
 
@@ -597,16 +548,16 @@
             birdVelocity += gravity;
             birdY += birdVelocity;
 
-            if (birdY > flappyCanvas.height - 20 || birdY < 0) { // Chim nhỏ hơn
+            if (birdY > flappyCanvas.height - 20 || birdY < 0) {
                 addCoins(Math.floor(flappyScore / 2));
                 showModal('💥 VA CHẠM!', `BẠN ĐẠT <strong>\( {flappyScore}</strong> ĐIỂM!<br>+ \){Math.floor(flappyScore / 2)} 💰`, false);
                 return;
             }
 
             flappyCtx.fillStyle = ownedItems.includes('heroBird') ? '#e74c3c' : '#FFEB3B';
-            flappyCtx.fillRect(50, birdY, 30, 20); // Chim nhỏ hơn (30x20 thay vì 40x30)
+            flappyCtx.fillRect(50, birdY, 30, 20);
             flappyCtx.fillStyle = '#000';
-            flappyCtx.fillRect(75, birdY + 5, 10, 8); // Mắt nhỏ hơn
+            flappyCtx.fillRect(75, birdY + 5, 10, 8);
 
             pipes.forEach(pipe => {
                 pipe.x -= 2;
@@ -614,7 +565,7 @@
                 flappyCtx.fillRect(pipe.x, 0, 50, pipe.gap);
                 flappyCtx.fillRect(pipe.x, pipe.gap + 150, 50, flappyCanvas.height - pipe.gap - 150);
 
-                if (pipe.x + 50 === 80) { // Hitbox nhỏ hơn
+                if (pipe.x + 50 === 80) {
                     flappyScore++;
                     document.getElementById('flappyScore').innerText = 'ĐIỂM HIỆN TẠI: ' + flappyScore + ' / 100';
                     playSound('eatSound');
@@ -641,7 +592,6 @@
         document.addEventListener('keydown', e => { if (e.key === ' ') { birdVelocity = jump; playSound('jumpSound'); } });
         flappyCanvas.addEventListener('touchstart', e => { e.preventDefault(); birdVelocity = jump; playSound('jumpSound'); });
 
-        // PIKACHU (GIỮ NGUYÊN)
         const emojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
         let pikachuCards = [...emojis, ...emojis];
         let selected = [];

@@ -362,11 +362,11 @@ canvas {
     text-shadow: 1px 1px 3px black;
 }
 
-.extra-buttons {
+.extra-buttons, .extra-buttons-main {
     margin-top: 20px;
 }
 
-.extra-buttons button {
+.extra-buttons button, .extra-buttons-main button {
     margin: 10px;
     padding: 15px 30px;
     font-size: 18px;

@@ -27,6 +27,16 @@
         <button class="info-btn" onclick="showInfo()">ℹ️ THÔNG TIN & UPDATE</button>
     </div>
 
+    <div id="mainScreen" class="game-container" style="display:block;">
+        <h2>🏠 MÀN HÌNH CHÍNH</h2>
+        <p>CHÀO MỪNG BẠN ĐẾN VỚI BỘ MINI GAME!</p>
+        <p>CHỌN TRÒ CHƠI Ở MENU TRÊN ĐỂ BẮT ĐẦU CHƠI NHÉ!</p>
+        <div class="extra-buttons-main">
+            <button onclick="showBugModal()">🐛 REPORT BUGS</button>
+            <button onclick="showSuggestModal()">💡 GỢI Ý TRÒ CHƠI</button>
+        </div>
+    </div>
+
     <div id="snake" class="game-container">
         <h2>🐍 RẮN SĂN MỒI</h2>
         <div class="controls-guide">
@@ -158,6 +168,7 @@
             <div id="rain" class="rain"></div>
             <h2 id="modalTitle">🎉 CHÚC MỪNG!</h2>
             <p id="modalMessage">BẠN ĐÃ THẮNG VỚI ĐIỂM SỐ TUYỆT VỜI!</p>
+            <p id="modalExtra" style="display:none;">BẠN ĐÃ THUA, CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!</p>
             <button class="restart-btn" onclick="restartCurrentGame()">🔄 CHƠI LẠI</button>
         </div>
     </div>
@@ -170,12 +181,10 @@
                 <p><strong>PHIÊN BẢN:</strong> 3.0</p>
                 <p><strong>CẬP NHẬT MỚI:</strong></p>
                 <ul>
-                    <li>BẢNG ĐIỂM CHUNG Ở ĐẦU TRANG</li>
-                    <li>HƯỚNG DẪN ĐIỀU KHIỂN RÕ RÀNG PC & MOBILE</li>
-                    <li>GIAO DIỆN ĐẸP LUNG LINH, CANVAS FULL FIT</li>
-                    <li>ÂM THANH MARIO/FF VUI TAI</li>
-                    <li>SHOP + LƯU ĐIỂM + SKIN HOẠT ĐỘNG 100%</li>
-                    <li>FIX HẾT LỖI CANVAS TRẮNG, LAYOUT MOBILE</li>
+                    <li>MÀN HÌNH CHÍNH RIÊNG BIỆT</li>
+                    <li>NÚT REPORT BUGS & GỢI Ý TRÒ CHƠI HOẠT ĐỘNG 100%</li>
+                    <li>FLAPPY BIRD CHẠM NHẢY MƯỢT, POPUP THUA ĐÚNG YÊU CẦU</li>
+                    <li>NÚT ĐIỀU KHIỂN HIỆN TRONG TẤT CẢ GAME</li>
                 </ul>
                 <p><strong>LỜI NHẮN:</strong> CHÚC CÁC BẠN CHƠI VUI! ❤️</p>
             </div>
@@ -210,10 +219,6 @@
     <div class="footer">
         <p>MADE IN VN 🇻🇳</p>
         <p>MADE BY: NGUYỄN CHÍ DỰ ♥️🇻🇳</p>
-        <div class="extra-buttons">
-            <button onclick="showBugModal()">🐛 REPORT BUGS</button>
-            <button onclick="showSuggestModal()">💡 GỢI Ý TRÒ CHƠI</button>
-        </div>
     </div>
 
     <audio id="eatSound" preload="auto" src="https://www.myinstants.com/media/sounds/coin-mario.mp3"></audio>
@@ -234,8 +239,16 @@
             document.getElementById('playerCoins').innerText = playerCoins;
             updateShopButtons();
             adjustCanvasSize();
-            showGame('snake');
+            showMainScreen();
         };
+
+        function showMainScreen() {
+            document.querySelectorAll('.game-container').forEach(div => div.style.display = 'none');
+            document.getElementById('mainScreen').style.display = 'block';
+            currentGame = 'mainScreen';
+            closeAllModals();
+            adjustCanvasSize();
+        }
 
         function showGame(gameId) {
             document.querySelectorAll('.game-container').forEach(div => div.style.display = 'none');
@@ -253,6 +266,7 @@
             document.getElementById('suggestModal').style.display = 'none';
             document.getElementById('fireworks').innerHTML = '';
             document.getElementById('rain').innerHTML = '';
+            document.getElementById('modalExtra').style.display = 'none';
         }
 
         function confirmStart() {
@@ -276,13 +290,13 @@
                 playerCoins = Math.max(0, playerCoins - 10);
                 localStorage.setItem('playerCoins', playerCoins);
                 document.getElementById('playerCoins').innerText = playerCoins;
-                showGame('snake');
+                showMainScreen();
             }
         }
 
         function confirmBackHome() {
             if (confirm('BẠN ĐỒNG Ý TRỞ VỀ MÀN HÌNH CHÍNH?')) {
-                showGame('snake');
+                showMainScreen();
             }
         }
 
@@ -316,15 +330,16 @@
             showGame(currentGame);
         }
 
-        function showModal(title, message, isVictory = false) {
+        function showModal(title, message, isVictory = false, isLose = false) {
             document.getElementById('modalTitle').innerHTML = title;
             document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('modalExtra').style.display = isLose ? 'block' : 'none';
             document.getElementById('gameModal').style.display = 'flex';
-            document.getElementById('fireworks').innerHTML = isVictory ? '' : '';
-            document.getElementById('rain').innerHTML = isVictory ? '' : '';
+            document.getElementById('fireworks').innerHTML = '';
+            document.getElementById('rain').innerHTML = '';
             if (isVictory) {
                 createFireworks();
-            } else {
+            } else if (isLose) {
                 createRain();
             }
             playSound(isVictory ? 'victorySound' : 'gameOverSound');
@@ -436,7 +451,7 @@
 
                 if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height || snake.slice(1).some(part => part.x === head.x && part.y === head.y)) {
                     addCoins(snakeScore);
-                    showModal('💔 GAME OVER!', `BẠN ĐẠT <strong>\( {snakeScore}</strong> ĐIỂM!<br>+ \){snakeScore} 💰 VÀO VÍ!`, false);
+                    showModal('💔 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${snakeScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
                     return;
                 }
 
@@ -550,7 +565,7 @@
 
             if (birdY > flappyCanvas.height - 20 || birdY < 0) {
                 addCoins(Math.floor(flappyScore / 2));
-                showModal('💥 VA CHẠM!', `BẠN ĐẠT <strong>\( {flappyScore}</strong> ĐIỂM!<br>+ \){Math.floor(flappyScore / 2)} 💰`, false);
+                showModal('💥 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${flappyScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
                 return;
             }
 
@@ -578,7 +593,7 @@
 
                 if (pipe.x < 80 && pipe.x > 20 && (birdY < pipe.gap || birdY + 20 > pipe.gap + 150)) {
                     addCoins(Math.floor(flappyScore / 2));
-                    showModal('💥 GAME OVER!', `ĐIỂM CAO: <strong>\( {flappyScore}</strong><br>+ \){Math.floor(flappyScore / 2)} 💰`, false);
+                    showModal('💥 BẠN ĐÃ THUA!', `BẠN ĐẠT <strong>${flappyScore}</strong> ĐIỂM!<br>CÓ MUỐN CHƠI LẠI KHÔNG? HÃY BẤM VÀO NÚT BÊN DƯỚI!`, false, true);
                     return;
                 }
             });
@@ -589,8 +604,9 @@
             flappyAnimationId = requestAnimationFrame(updateFlappy);
         }
 
-        document.addEventListener('keydown', e => { if (e.key === ' ') { birdVelocity = jump; playSound('jumpSound'); } });
-        flappyCanvas.addEventListener('touchstart', e => { e.preventDefault(); birdVelocity = jump; playSound('jumpSound'); });
+        document.addEventListener('keydown', e => { if (e.key === ' ') { if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } } });
+        flappyCanvas.addEventListener('click', () => { if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } });
+        flappyCanvas.addEventListener('touchstart', e => { e.preventDefault(); if (gameStarted) { birdVelocity = jump; playSound('jumpSound'); } });
 
         const emojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
         let pikachuCards = [...emojis, ...emojis];
@@ -638,6 +654,93 @@
                     }, 800);
                 }
                 selected = [];
+            }
+        }
+
+        function showInfo() {
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function closeInfo() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        function showBugModal() {
+            document.getElementById('bugModal').style.display = 'flex';
+        }
+
+        function closeBugModal() {
+            document.getElementById('bugModal').style.display = 'none';
+        }
+
+        function sendBugReport() {
+            const email = document.getElementById('bugEmail').value.trim();
+            const message = document.getElementById('bugMessage').value.trim();
+            if (email && message) {
+                alert('CẢM ƠN BẠN ĐÃ BÁO CÁO LỖI, MÌNH SẼ SỚM SỬA LỖI TRONG VÒNG 24H HOẶC HƠN NẾU MÌNH BẬN');
+                document.getElementById('bugEmail').value = '';
+                document.getElementById('bugMessage').value = '';
+                closeBugModal();
+            } else {
+                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ TIN NHẮN!');
+            }
+        }
+
+        function showSuggestModal() {
+            document.getElementById('suggestModal').style.display = 'flex';
+        }
+
+        function closeSuggestModal() {
+            document.getElementById('suggestModal').style.display = 'none';
+        }
+
+        function sendSuggest() {
+            const email = document.getElementById('suggestEmail').value.trim();
+            const message = document.getElementById('suggestMessage').value.trim();
+            if (email && message) {
+                alert('CẢM ƠN GỢI Ý CỦA BẠN! MÌNH SẼ XEM XÉT THÊM TRÒ MỚI ❤️');
+                document.getElementById('suggestEmail').value = '';
+                document.getElementById('suggestMessage').value = '';
+                closeSuggestModal();
+            } else {
+                alert('VUI LÒNG NHẬP ĐẦY ĐỦ GMAIL VÀ GỢI Ý!');
+            }
+        }
+
+        function updateShopButtons() {
+            const buttons = {
+                'redSnake': 'buy-redSnake',
+                'rainbowSnake': 'buy-rainbowSnake',
+                'heroBird': 'buy-heroBird',
+                'sparkleMatch': 'buy-sparkleMatch'
+            };
+            Object.keys(buttons).forEach(item => {
+                const btn = document.getElementById(buttons[item]);
+                if (btn) {
+                    if (ownedItems.includes(item)) {
+                        btn.innerText = 'ĐÃ SỞ HỮU';
+                        btn.disabled = true;
+                    } else {
+                        btn.innerText = 'MUA';
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        function buyItem(item, cost) {
+            if (playerCoins >= cost && !ownedItems.includes(item)) {
+                playerCoins -= cost;
+                ownedItems.push(item);
+                localStorage.setItem('playerCoins', playerCoins);
+                localStorage.setItem('ownedItems', JSON.stringify(ownedItems));
+                document.getElementById('playerCoins').innerText = playerCoins;
+                alert('🎉 MUA THÀNH CÔNG! ITEM ĐÃ ĐƯỢC THÊM VÀO KHO.');
+                updateShopButtons();
+            } else if (ownedItems.includes(item)) {
+                alert('BẠN ĐÃ SỞ HỮU ITEM NÀY RỒI!');
+            } else {
+                alert('KHÔNG ĐỦ ĐIỂM ĐỂ MUA!');
             }
         }
     </script>
